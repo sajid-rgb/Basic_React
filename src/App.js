@@ -1,29 +1,66 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './main.css';
-
-import image1  from './images/1.jpg';
-import { data } from './data/data.js';
-import Flower from './Components/Flower/Flower.js';
-import FlowerDetails from './Components/FlowerDetalis/FlowerDetails';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Searchbar from './Components/Searchbar/Searchbar';
+import Meals from './Components/Meals/Meals';
+import { Container, Placeholder, Row, Spinner } from 'react-bootstrap';
 
 //jsx-functional-component
 const App = () => {
+  const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const handleChange = (event) => {
+    setSearch(event.target.value);
+  }
 
-  const [flower, setFlower] = useState({});
-
+  useEffect(() => {
+    if (search !== '') {
+      setIsLoading(true);
+      setData([]);
+      fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          if(data.meals === null){
+            setIsLoading(false);
+            setData([]);
+          } else {
+            setIsLoading(false);
+            setData(data.meals);
+          }
+        })
+    }
+  }, [search])
+  
+ const Loader = ()=>{
+   return(
+    <Spinner animation="grow" />
+   )
+ }
 
   return (
-   <div>
-     <div>
-       <FlowerDetails flower ={flower}/>
-
-     </div>
-      <div className="main">
+    <div>
+      <Searchbar handleChange={handleChange} />
+      <Container className="d-flex align-items-center justify-content-center">
       {
-        data.map(d=>  <Flower d={d} setFlower={setFlower}/>)
+        isLoading ? <Loader /> : ''
+      }
+        </Container>
+     <Container className="d-flex align-items-center justify-content-center">
+     {
+        data.length === 0 && search !== '' && isLoading === false ? <div className="alert alert-danger w-100">No Data</div> : ''
+      }
+     </Container>
+      <Container className="mx-auto">
+      <Row>
+        {
+          data.length !== 0 ? data.map(meal => <Meals key={meal.idMeal} meal={meal} />) : ''
+        }
+      </Row>
+        </Container>
+    </div>
+  )
 }
-</div>
-   </div>
-  )}
 
 export default App;
