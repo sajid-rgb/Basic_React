@@ -4,6 +4,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Searchbar from './Components/Searchbar/Searchbar';
 import Meals from './Components/Meals/Meals';
 import { Container, Placeholder, Row, Spinner } from 'react-bootstrap';
+import Navigation from './Components/Navigation/Navigation';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Cart from './Components/Cart/Cart';
+import Login from './Components/Login/Login';
 
 //jsx-functional-component
 const App = () => {
@@ -22,7 +30,7 @@ const App = () => {
         .then(res => res.json())
         .then(data => {
           console.log(data);
-          if(data.meals === null){
+          if (data.meals === null) {
             setIsLoading(false);
             setData([]);
           } else {
@@ -32,33 +40,42 @@ const App = () => {
         })
     }
   }, [search])
-  
- const Loader = ()=>{
-   return(
-    <Spinner animation="grow" />
-   )
- }
+
+  const Loader = () => {
+    return (
+      <Spinner animation="grow" />
+    )
+  }
 
   return (
     <div>
-      <Searchbar handleChange={handleChange} />
+      <div>
+        <BrowserRouter>
+        <Navigation />
+          <Routes>
+          <Route path="/" element={<Searchbar handleChange={handleChange}  />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="login" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
       <Container className="d-flex align-items-center justify-content-center">
-      {
-        isLoading ? <Loader /> : ''
-      }
-        </Container>
-     <Container className="d-flex align-items-center justify-content-center">
-     {
-        data.length === 0 && search !== '' && isLoading === false ? <div className="alert alert-danger w-100">No Data</div> : ''
-      }
-     </Container>
-      <Container className="mx-auto">
-      <Row>
         {
-          data.length !== 0 ? data.map(meal => <Meals key={meal.idMeal} meal={meal} />) : ''
+          isLoading ? <Loader /> : ''
         }
-      </Row>
-        </Container>
+      </Container>
+      <Container className="d-flex align-items-center justify-content-center">
+        {
+          data.length === 0 && search !== '' && isLoading === false ? <div className="alert alert-danger w-100">No Data</div> : ''
+        }
+      </Container>
+      <Container className="mx-auto">
+        <Row>
+          {
+            data.length !== 0 ? data.map(meal => <Meals key={meal.idMeal} meal={meal} />) : ''
+          }
+        </Row>
+      </Container>
     </div>
   )
 }
