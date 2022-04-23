@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import { AppContext } from '../../App';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const {setUserData, userData} = useContext(AppContext);
 
     const navigate = useNavigate();
-
-    const dummyData = {
-        email: 'sajid1234@gmail.com',
-        password: '123456'
-    }
 
     const handleChange = (event) => {
         if (event.target.name === 'email') {
@@ -30,8 +28,8 @@ const Login = () => {
         } else if (password.length < 6) {
             setError('Password must be at least 6 characters');
         }
-        else if (email === dummyData.email && password === dummyData.password) {
-            navigate('/cart');
+        else if (email === userData.email && password === userData.password) {
+            navigate('/home');
             setEmail('');
             setPassword('');
             setError('');
@@ -41,7 +39,8 @@ const Login = () => {
 
     }
     return (
-        <form onSubmit={handleLogin}>
+       <div>
+            <form onSubmit={handleLogin}>
             {
                 error !== '' ? <p className="alert alert-danger">{error}</p> : ''
             }
@@ -51,6 +50,8 @@ const Login = () => {
             <br />
             <input type="submit" />
         </form>
+        <Link to="/registration">I have no account</Link>
+       </div>
     );
 };
 
