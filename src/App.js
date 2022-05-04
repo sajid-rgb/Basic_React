@@ -12,6 +12,7 @@ import Cart from './Components/Cart/Cart';
 import Login from './Components/Login/Login';
 import Home from './Components/Home/Home';
 import Registration from './Components/Login/Registration';
+import Users from './Components/Admin/Users';
 
 export const AppContext = createContext();
 
@@ -21,7 +22,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [cart, setCart] = useState([]);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState([]);
+  const [user, setUser] = useState({});
   const handleChange = (event) => {
     setSearch(event.target.value);
   }
@@ -48,7 +50,7 @@ const App = () => {
 
   return (
     <div>
-    <AppContext.Provider value = {{cart, setCart, userData, setUserData}}>
+    <AppContext.Provider value = {{cart, setCart, userData, setUserData, user, setUser}}>
       <div>
         <BrowserRouter>
         <Navigation />
@@ -58,6 +60,7 @@ const App = () => {
             <Route path="cart" element={<Cart />} />
             <Route path="login" element={<Login />} />
           <Route path="registration" element={<Registration />} />
+          <Route path="admin" element={<Users />} />
             <Route path="*" element={<div className="text-danger">404! Not found</div>} />
           </Routes>
         </BrowserRouter>

@@ -7,7 +7,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const {setUserData, userData} = useContext(AppContext);
+    const {userData, setUser} = useContext(AppContext);
 
     const navigate = useNavigate();
 
@@ -22,14 +22,15 @@ const Login = () => {
 
     const handleLogin = (event) => {
         event.preventDefault();
-        console.log(email, password);
+        const loginUser = userData.find(user => user.email === email && user.password === password);
         if (email === '' && password === '') {
             setError('Please enter email and password');
         } else if (password.length < 6) {
             setError('Password must be at least 6 characters');
         }
-        else if (email === userData.email && password === userData.password) {
+        else if (email === loginUser.email && password === loginUser.password) {
             navigate('/home');
+            setUser(loginUser);
             setEmail('');
             setPassword('');
             setError('');

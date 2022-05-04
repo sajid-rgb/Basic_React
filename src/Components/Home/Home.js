@@ -6,8 +6,7 @@ import { AppContext } from '../../App';
 
 const Home = (props) => {
     const {handleChange, search, data, isLoading} = props;
-    const {setUserData, userData} = useContext(AppContext);
-    console.log(userData);
+    const {user} = useContext(AppContext);
     const Loader = () => {
         return (
           <Spinner animation="grow" />
@@ -15,7 +14,7 @@ const Home = (props) => {
       }
     return (
         <>
-        {userData.length > 0 && <h1>Welcome {userData.name}</h1>}
+        {user.length > 0 && <h1>Welcome {user.name}</h1>}
         <Searchbar handleChange={handleChange} />
               <Container className="d-flex align-items-center justify-content-center">
         {

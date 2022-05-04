@@ -13,7 +13,7 @@ const Registration = () => {
 
     const handleRegister = (e) => {
         e.preventDefault();
-        setUserData(formData );
+        setUserData([...userData, formData] );
         navigate('/login')
 
     }
